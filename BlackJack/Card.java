@@ -22,8 +22,9 @@ public class Card {
                      "|           |" +
                      "|           |" +
                      "|           |" +
-                     "|___________|", this.value, this.suit);
+                     "|___________|", this.value, this.suit.indexOf(0));
 
         return str;
     }
+
 }
