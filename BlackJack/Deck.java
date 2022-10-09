@@ -9,11 +9,13 @@ public class Deck {
 
     
     public void initDeck() {
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 13; j++) {
-                cards[(i)*4 + (j)] = new Card(values[j], suits[i]);
+        for (int i = 0; i < 13; i++) {
+            for (int j = 0; j < 4; j++) {
+                cards[(i)*4 + (j)] = new Card(values[i], suits[j], false);
             }
         }
+
+        
     }
 
     public void shuffleDeck() {
@@ -26,5 +28,7 @@ public class Deck {
 			cards[i] = temp;
 		}
     }
+
+
 }
 
