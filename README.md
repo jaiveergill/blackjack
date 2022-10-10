@@ -29,7 +29,7 @@ Player Bob
 |           |
 |     H     |
 |           |
-|           |
+|           | 
 |__________6|
 
 Player Calvin
