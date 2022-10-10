@@ -26,6 +26,12 @@ public class Card {
                      "|░░░░░░░░░░░|\n" +
                      "|░░░░░░░░░░░|\n";
         if (visible) {
+            String val = this.value;
+            try {
+                int x = Integer.parseInt(val);
+            } catch (Exception numberFormaException) {
+                val = String.valueOf(val.charAt(0));
+            }
             str = String.format(" ___________\n" +
                                 "|%s          |\n" +
                                 "|           |\n" +
@@ -33,7 +39,8 @@ public class Card {
                                 "|     %s     |\n" +
                                 "|           |\n" +
                                 "|           |\n" +
-                                "|__________%s|\n", this.value, this.suit.charAt(0), this.value);
+                                "|__________%s|\n", val, this.suit.charAt(0), val);
+           
         }
 
         return str;
