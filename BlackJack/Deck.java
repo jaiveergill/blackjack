@@ -10,6 +10,9 @@ public class Deck {
     public String[] values = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"};
 
     
+    /**
+     * intializes deck with hard values
+     */
     public void initDeck() {
         for (int i = 0; i < 13; i++) {
             for (int j = 0; j < 4; j++) {
@@ -21,6 +24,9 @@ public class Deck {
         
     }
 
+    /**
+     * Shuffles deck with random 
+     */
     public void shuffleDeck() {
         Random rand = new Random();
 		
@@ -32,6 +38,9 @@ public class Deck {
 		}
     }
 
+    /**
+     * Not used but I kept in it case
+     */
     public void reset() {
         initDeck();
         shuffleDeck();
