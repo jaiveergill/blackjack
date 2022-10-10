@@ -9,6 +9,7 @@ import java.util.Scanner;
 
 import javax.security.sasl.SaslException;
 import javax.swing.event.SwingPropertyChangeSupport;
+import javax.swing.plaf.synth.SynthSeparatorUI;
 
 
 public class BlackJackGame {
@@ -17,7 +18,7 @@ public class BlackJackGame {
     public static Deck deck = new Deck();
     public static Scanner sc = new Scanner(System.in);
     public static Integer dealerHand = 0;
-    public static Boolean gameNotOver = false;
+    public static Boolean gameNotOver = true;
     public static List<Player> players = new ArrayList<Player>();
     public static Dealer dealer = new Dealer();
 
@@ -26,15 +27,18 @@ public class BlackJackGame {
         deck.initDeck();
         deck.shuffleDeck();
         dealCards();
+
         for (Player p: players) {
             displayHand(p);
         }
 
         displayHand(dealer);
-
-        while (!gameNotOver) {
-            isGameOver();
+        
+        while (gameNotOver) {
+            System.out.println(gameNotOver);
             nextTurn();
+            System.out.println("Dealer hand: ");
+            displayHand(dealer);
         }
 
         System.out.println(players.get(0).hand.cards);
@@ -69,6 +73,10 @@ public class BlackJackGame {
 
     public static void nextTurn() {
         for (int i = 0; i < players.size(); i++) {
+            isGameOver();
+            if (players.get(i).busted || players.get(i).stood) {
+                continue;
+            }
             System.out.println(players.get(i).name + ", it's your turn. You can hit, stand, or say deck to see your deck.");
             String res = sc.next();
             if (res.contains("hit")) {
@@ -77,9 +85,16 @@ public class BlackJackGame {
                 deck.cards.remove(0);
                 System.out.println("You have hit a " + newCard);
             } else if (res.contains("stand")) {
+                players.get(i).stood = true;
                 System.out.println("You have stood.");
             } else if (res.contains("deck")) {
                 players.get(i).hand.displayCards();
+                i --;
+                continue;
+            } else {
+                System.out.println("Please enter hit, stand, or deck");
+                i --;
+                continue;
             }
         }
         if (dealer.shouldDraw()) {
@@ -107,27 +122,43 @@ public class BlackJackGame {
                 if (p.hand.getValue() == 21) {
                     System.out.println(p.name + " and the dealer tie!");
                     p.wins += 0.5;
+                    gameNotOver = false;
+                    return;
+                } else {
+                    System.out.println("Dealer blackjacks!");
+                    gameNotOver = false;
                 }
             }
-            System.out.println("Dealer wins!");
         } else if (dealer.hand.getValue() < 21) {
             for (Player p: players) {
                 if (p.hand.getValue() == 21) {
                     System.out.println(p.name + " blackjacks!");
+                    p.blackjacked = true;
                     p.wins ++;
+                    gameNotOver = false;
+                    return;
+                } else if (p.hand.getValue() > 21) {
+                    System.out.println(p.name + " busts!");
+                    p.setBusted();
                 }
             }
         } else if (dealer.hand.getValue() > 21) {
             System.out.println("Dealer busts!");
-        } else if (dealer.hand.getValue() <= 21) {
-            for (Player p: players) {
-                if (p.hand.getValue() == 21) {
-                    System.out.println(p.name + " and the dealer tie!");
-                } else if (p.hand.getValue() > 21) {
-                    System.out.println(p.name + " busts!");
-                }
+            System.out.println("They had " + dealer.hand.cards);
+            gameNotOver = false;
+            return;
+        }
+
+        for (Player p: players) {
+            if (p.busted) {
+                continue;
+            } else {
+                return;
             }
         }
+        System.out.println("All players have busted! Dealer wins!");
+        gameNotOver = false;
+
 
     }
 
