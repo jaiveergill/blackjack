@@ -9,6 +9,10 @@ public class Hand {
     public Hand(List<Card> cards) {
         this.cards = cards;
     }
+
+    /**
+     * display all cards in hand
+     */
     public void displayCards() {
         for (int i = 0; i < this.cards.size(); i++) {
             System.out.println(this.cards);
@@ -16,10 +20,16 @@ public class Hand {
         }
     }
 
+    /**
+     * @param card Card to add to hand
+     */
     public void addCard(Card card) {
         this.cards.add(card);
     }
 
+    /**
+     * @return an Integer value of sum of all cards in the Hand, including aces
+     */
     public Integer getValue() {
         int c = 0;
         int aces = 0; // special case for Aces because the can be 1 or 11
