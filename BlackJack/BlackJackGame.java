@@ -13,7 +13,6 @@ import javax.swing.plaf.synth.SynthSeparatorUI;
 
 
 public class BlackJackGame {
-    // public static Card[][] players;
     public static int topCard = 0;
     public static Deck deck = new Deck();
     public static Scanner sc = new Scanner(System.in);
@@ -35,12 +34,31 @@ public class BlackJackGame {
         displayHand(dealer);
         
         while (gameNotOver) {
-            System.out.println(gameNotOver);
             nextTurn();
             System.out.println("Dealer hand: ");
             displayHand(dealer);
         }
 
+        for (Player p: players) {
+            System.out.println(p.name + ", would you like to play again? (Y/N)");
+            String res = sc.next();
+            if (res == "N") {
+                players.remove(p);
+            }
+        }
+
+        System.out.println("Would any new players like to join? (Y/N)");
+        String res = sc.next();
+        if (res == "Y") {
+            initPlayers();
+        }
+
+        if (players.size() == 0) {
+            System.out.println("Thanks! That's it for blackjack!");
+        } else {
+            gameNotOver = true;
+            main(args);
+        }
         System.out.println(players.get(0).hand.cards);
         
     }
@@ -145,18 +163,52 @@ public class BlackJackGame {
         } else if (dealer.hand.getValue() > 21) {
             System.out.println("Dealer busts!");
             System.out.println("They had " + dealer.hand.cards);
+            String winner = "No one";
+            int max = 0;
+            for (Player p: players) {
+                if (p.hand.getValue() > max && !p.busted) {
+                    max = p.hand.getValue();
+                    winner = p.name;
+                }
+            }
+            System.out.println(winner + "won!");
             gameNotOver = false;
             return;
         }
 
+        int busted = 0;
         for (Player p: players) {
             if (p.busted) {
+                busted ++;
+            }
+        }
+
+        if (busted == players.size()) {
+            System.out.println("All players have busted! Dealer wins!");
+        }
+        
+        for (Player p: players) {
+            System.out.println(p.stood);
+            if (p.stood && !dealer.shouldDraw()) {
                 continue;
             } else {
                 return;
             }
         }
-        System.out.println("All players have busted! Dealer wins!");
+
+        System.out.println("All players have stood!");
+        for (Player p:players) {
+            if (dealer.hand.getValue() > p.hand.getValue()) {
+                System.out.println("Dealer wins!");
+                System.out.println("Dealer had a hand of " + dealer.hand.getValue());
+                gameNotOver = false;
+                return;
+            } else {
+                System.out.println(p.name + " has beat the dealer!");
+                p.wins ++;
+                gameNotOver = false;
+            }
+        }
         gameNotOver = false;
 
 
