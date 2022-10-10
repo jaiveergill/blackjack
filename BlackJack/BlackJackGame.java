@@ -166,7 +166,7 @@ public class BlackJackGame {
                     gameNotOver = false;
                     return false;
                 } else {
-                    System.out.println("Dealer blackjacks! They had " + dealer.hand);
+                    System.out.println("Dealer blackjacks! They had " + dealer.hand.getValue());
                     gameNotOver = false;
                     return false;
                 }
@@ -174,7 +174,7 @@ public class BlackJackGame {
         } else if (dealer.hand.getValue() < 21) {
             for (Player p: players) {
                 if (p.hand.getValue() == 21) {
-                    System.out.println(p.name + " blackjacks! They had " + p.hand);
+                    System.out.println(p.name + " blackjacks! They had " + p.hand.getValue());
                     p.blackjacked = true;
                     p.wins ++;
                     gameNotOver = false;
@@ -206,15 +206,20 @@ public class BlackJackGame {
                 busted ++;
             }
         }
-
+        
         if (busted == players.size()) {
             System.out.println("All players have busted! Dealer wins!");
         }
         
+        
+        int stood = 0;
         for (Player p: players) {
             if (p.stood && !dealer.shouldDraw()) {
                 continue;
             } else {
+                if (p.busted) {
+                    continue;
+                }
                 return true;
             }
         }
