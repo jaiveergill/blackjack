@@ -11,7 +11,7 @@ public class Hand {
     }
     public void displayCards() {
         for (int i = 0; i < this.cards.size(); i++) {
-            // System.out.println(cards[0]);
+            System.out.println(this.cards);
             System.out.println(this.cards.get(i).visRep());
         }
     }

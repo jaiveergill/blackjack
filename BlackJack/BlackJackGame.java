@@ -26,7 +26,16 @@ public class BlackJackGame {
         deck.initDeck();
         deck.shuffleDeck();
         dealCards();
-        
+        for (Player p: players) {
+            displayHand(p);
+        }
+
+        displayHand(dealer);
+
+        while (!gameNotOver) {
+            isGameOver();
+            nextTurn();
+        }
 
         System.out.println(players.get(0).hand.cards);
         
@@ -54,15 +63,74 @@ public class BlackJackGame {
         }
         List<Card> twoCards = new ArrayList<Card>();
         twoCards.add(new Card(deck.cards.get(0).value, deck.cards.get(0).suit, true));
-        twoCards.add(new Card(deck.cards.get(1).value, deck.cards.get(1).suit, true));
+        twoCards.add(new Card(deck.cards.get(1).value, deck.cards.get(1).suit, false));
         dealer.setHand(new Hand(twoCards));
     }
 
     public static void nextTurn() {
         for (int i = 0; i < players.size(); i++) {
-            
+            System.out.println(players.get(i).name + ", it's your turn. You can hit, stand, or say deck to see your deck.");
+            String res = sc.next();
+            if (res.contains("hit")) {
+                Card newCard = new Card(deck.cards.get(0).value, deck.cards.get(0).suit, true);
+                players.get(i).hand.addCard(newCard);
+                deck.cards.remove(0);
+                System.out.println("You have hit a " + newCard);
+            } else if (res.contains("stand")) {
+                System.out.println("You have stood.");
+            } else if (res.contains("deck")) {
+                players.get(i).hand.displayCards();
+            }
+        }
+        if (dealer.shouldDraw()) {
+            System.out.println("Dealer hits!");
+            Card newCard = new Card(deck.cards.get(0).value, deck.cards.get(0).suit, true);
+            dealer.hand.addCard(newCard);
+            deck.cards.remove(0);
         }
     }
+
+    public static void displayHand(Person p) {
+        if (p.name == null) {
+            System.out.println("Dealer");
+        } else {
+            System.out.println("Player " + p.name);
+        }
+        for (Card c: p.hand.cards) {
+            System.out.println(c.visRep());
+        }
+    }
+
+    public static void isGameOver() {
+        if (dealer.hand.getValue() == 21) {
+            for (Player p: players) {
+                if (p.hand.getValue() == 21) {
+                    System.out.println(p.name + " and the dealer tie!");
+                    p.wins += 0.5;
+                }
+            }
+            System.out.println("Dealer wins!");
+        } else if (dealer.hand.getValue() < 21) {
+            for (Player p: players) {
+                if (p.hand.getValue() == 21) {
+                    System.out.println(p.name + " blackjacks!");
+                    p.wins ++;
+                }
+            }
+        } else if (dealer.hand.getValue() > 21) {
+            System.out.println("Dealer busts!");
+        } else if (dealer.hand.getValue() <= 21) {
+            for (Player p: players) {
+                if (p.hand.getValue() == 21) {
+                    System.out.println(p.name + " and the dealer tie!");
+                } else if (p.hand.getValue() > 21) {
+                    System.out.println(p.name + " busts!");
+                }
+            }
+        }
+
+    }
+
 }
 
 

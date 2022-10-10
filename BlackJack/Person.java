@@ -3,7 +3,7 @@ package BlackJack;
 import java.util.Scanner;
 
 public class Person {
-    public static int wins = 0;
+    public int wins = 0;
     public String name;
     public Hand hand;
 
