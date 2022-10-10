@@ -35,20 +35,23 @@ public class BlackJackGame {
                 Thread.currentThread().interrupt();
             }
         }
-
+        System.out.println("GAME OVER ");
+        List<Player> copyList = new ArrayList<Player>(players);
         for (Player p: players) {
             System.out.println(p.name + ", would you like to play again? (Y/N)");
             String res = sc.next();
-            if (res == "N") {
-                Boolean result = players.remove(p);
-                System.out.println(result);
+            
+            if (res.equals("N")) {
+                copyList.remove(p);
             }
         }
-
+        players = copyList;
         System.out.println("Would any new players like to join? (Y/N)");
         String res = sc.next();
-        if (res == "Y") {
+        if (res.equals("Y")) {
             initPlayers();
+            gameNotOver = true;
+            main(args);
         } else if (players.size() == 0) {
             System.out.println("Thanks! That's it for blackjack!");
         } else {
@@ -100,6 +103,7 @@ public class BlackJackGame {
                 players.get(i).hand.addCard(newCard);
                 deck.cards.remove(0);
                 System.out.println("You have hit a " + newCard);
+                System.out.println("Your hand value is " + players.get(i).hand.getValue());
             } else if (res.contains("stand")) {
                 players.get(i).stood = true;
                 System.out.println("You have stood.");
@@ -114,8 +118,8 @@ public class BlackJackGame {
             }
         }
         if (dealer.shouldDraw()) {
-            System.out.println("Dealer hits!");
             Card newCard = new Card(deck.cards.get(0).value, deck.cards.get(0).suit, true);
+            System.out.println("Dealer hits " + newCard.toString() + ". Total hand value: " + dealer.hand.getValue());
             dealer.hand.addCard(newCard);
             deck.cards.remove(0);
         }
@@ -141,7 +145,7 @@ public class BlackJackGame {
                     gameNotOver = false;
                     return false;
                 } else {
-                    System.out.println("Dealer blackjacks!");
+                    System.out.println("Dealer blackjacks! They had " + dealer.hand);
                     gameNotOver = false;
                     return false;
                 }
@@ -149,7 +153,7 @@ public class BlackJackGame {
         } else if (dealer.hand.getValue() < 21) {
             for (Player p: players) {
                 if (p.hand.getValue() == 21) {
-                    System.out.println(p.name + " blackjacks!");
+                    System.out.println(p.name + " blackjacks! They had " + p.hand);
                     p.blackjacked = true;
                     p.wins ++;
                     gameNotOver = false;
@@ -161,7 +165,7 @@ public class BlackJackGame {
             }
         } else if (dealer.hand.getValue() > 21) {
             System.out.println("Dealer busts!");
-            System.out.println("They had " + dealer.hand.cards);
+            System.out.println("They had " + dealer.hand.getValue());
             String winner = "No one";
             int max = 0;
             for (Player p: players) {
@@ -199,6 +203,9 @@ public class BlackJackGame {
             if (dealer.hand.getValue() > p.hand.getValue()) {
                 System.out.println("Dealer wins!");
                 System.out.println("Dealer had a hand of " + dealer.hand.getValue());
+                for (Player pl: players) {
+                    System.out.println(pl.name + " had a hand of " + pl.hand.getValue());
+                }
                 gameNotOver = false;
                 return false;
             } else {
