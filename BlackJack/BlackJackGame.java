@@ -5,12 +5,10 @@ import java.util.Scanner;
 
 
 public class BlackJackGame {
-    public static int topCard = 0;
-    public static Deck deck = new Deck();
-    public static Scanner sc = new Scanner(System.in);
-    public static Integer dealerHand = 0;
-    public static Boolean gameNotOver = true;
-    public static List<Player> players = new ArrayList<Player>();
+    public static Deck deck = new Deck(); // initialize instance of Deck
+    public static Scanner sc = new Scanner(System.in); // Scanner to take input 
+    public static Boolean gameNotOver = true; // main loop
+    public static List<Player> players = new ArrayList<Player>(); // all players
     public static Dealer dealer = new Dealer();
 
     public static void main(String[] args) {
@@ -19,41 +17,45 @@ public class BlackJackGame {
         deck.shuffleDeck();
         dealCards();
 
+        // just show everyone's hands at beginning
         for (Player p: players) {
             displayHand(p);
         }
 
-        displayHand(dealer);
+        displayHand(dealer); 
         
+        // MAIN LOOP
         while (gameNotOver) {
             System.out.println("Dealer hand: ");
-            displayHand(dealer);
+            displayHand(dealer); // show dealer hand because players usually would't know it
             nextTurn();
             try {
-                Thread.sleep(1000);
+                Thread.sleep(1000); // pause so they can see results
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
         }
+
+        // new game process
         System.out.println("GAME OVER ");
         List<Player> copyList = new ArrayList<Player>(players);
         for (Player p: players) {
-            System.out.println(p.name + ", would you like to play again? (Y/N)");
-            String res = sc.next();
+            System.out.println(p.name + ", would you like to play again? (Y/N)"); // making sure everyone still wants to play
+            String res = sc.next(); 
             
             if (res.equals("N")) {
                 copyList.remove(p);
             }
         }
         players = copyList;
-        System.out.println("Would any new players like to join? (Y/N)");
+        System.out.println("Would any new players like to join? (Y/N)"); // new players?
         String res = sc.next();
         if (res.equals("Y")) {
             initPlayers();
             gameNotOver = true;
             main(args);
         } else if (players.size() == 0) {
-            System.out.println("Thanks! That's it for blackjack!");
+            System.out.println("Thanks! That's it for blackjack!"); // no players left
         } else {
             gameNotOver = true;
             main(args);
@@ -61,6 +63,10 @@ public class BlackJackGame {
         
     }
 
+    /**
+     * Used to see how many players are playing and get all of their names
+     * Used at the start and when checking for new players
+     */
     public static void initPlayers() {
         System.out.println("How many players want to play?");
         Integer nPlayers = sc.nextInt();
@@ -72,6 +78,9 @@ public class BlackJackGame {
         }
     }
     
+    /**
+     * Give all players two cards from the top of the deck and remove the cards from 
+     */
     public static void dealCards() {
         for (int i = 0; i < players.size(); i++) {
             List<Card> twoCards = new ArrayList<Card>();
@@ -87,6 +96,10 @@ public class BlackJackGame {
         dealer.setHand(new Hand(twoCards));
     }
 
+    /**
+     * Main turn loop function for each player's turn
+     * also check's if game is over
+     */
     public static void nextTurn() {
         for (int i = 0; i < players.size(); i++) {
             Boolean isNotOver = isGameOver();
@@ -125,6 +138,10 @@ public class BlackJackGame {
         }
     }
 
+    /**
+     * @param p, Person being displayed
+     * useful function to show each player's hand
+     */
     public static void displayHand(Person p) {
         if (p.name == null) {
             System.out.println("Dealer");
@@ -136,6 +153,10 @@ public class BlackJackGame {
         }
     }
 
+    /**
+     * @return Boolean value for whether game is over
+     * checks many scenarios for whether game is over
+     */
     public static Boolean isGameOver() {
         if (dealer.hand.getValue() == 21) {
             for (Player p: players) {
