@@ -12,10 +12,16 @@ public class Card {
         this.visible=visible;
     }
 
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
     public String toString() {
         return value + " of " + suit; 
     }
 
+    /**
+     * @return a String for visual representation of each card
+     */
     public String visRep() {
         String str = " ___________\n" +
                      "|░░░░░░░░░░░|\n" +
