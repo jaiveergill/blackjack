@@ -17,14 +17,24 @@ public class Card {
     }
 
     public String visRep() {
-        String str = String.format(" ___________\n" +
-                     "|%s        %s |\n" +
-                     "|           |\n" +
-                     "|           |\n" +
-                     "|           |\n" +
-                     "|           |\n" +
-                     "|           |\n" +
-                     "|___________|\n", this.value, this.suit.charAt(0));
+        String str = " ___________\n" +
+                     "|░░░░░░░░░░░|\n" +
+                     "|░░░░░░░░░░░|\n" +
+                     "|░░░░░░░░░░░|\n" +
+                     "|░░░░░░░░░░░|\n" +
+                     "|░░░░░░░░░░░|\n" +
+                     "|░░░░░░░░░░░|\n" +
+                     "|░░░░░░░░░░░|\n";
+        if (visible) {
+            str = String.format(" ___________\n" +
+                                "|%s          |\n" +
+                                "|           |\n" +
+                                "|           |\n" +
+                                "|     %s     |\n" +
+                                "|           |\n" +
+                                "|           |\n" +
+                                "|__________%s|\n", this.value, this.suit.charAt(0), this.value);
+        }
 
         return str;
     }
