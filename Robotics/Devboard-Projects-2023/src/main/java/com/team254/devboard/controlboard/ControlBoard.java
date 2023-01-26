@@ -14,7 +14,7 @@ public class ControlBoard implements IDriveControlBoard, IButtonControlBoard {
     }
 
     private final IDriveControlBoard mDriveControlBoard;
-    private final IButtonControlBoard mButtonControlBoard;
+    public final IButtonControlBoard mButtonControlBoard;
 
     public ControlBoard() {
         mDriveControlBoard = Constants.kUseDriveGamepad ? GamepadDriveControlBoard.getInstance()

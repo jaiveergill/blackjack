@@ -19,3 +19,5 @@ public class LazySolenoid extends Solenoid {
         }
     }
 }
+
+

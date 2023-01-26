@@ -1,8 +1,12 @@
 package com.team254.devboard.subsystems;
+import java.time.Period;
+
+import com.ctre.phoenixpro.configs.TalonFXConfiguration;
+import com.ctre.phoenixpro.configs.TalonFXConfigurator;
+import com.ctre.phoenixpro.controls.DutyCycleOut;
 import com.ctre.phoenixpro.hardware.TalonFX;
 import com.team254.devboard.Constants;
 import com.team254.lib.drivers.TalonFXFactory;
-import com.team254.lib.loops.ILooper;
 import com.team254.lib.util.DriveSignal;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -11,7 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Drive extends Subsystem{
     private static Drive mInstance;
-    private final TalonFX mLeftMaster, mRightMaster;
+    public final TalonFX mLeftMaster, mRightMaster;
 
 
     public static Drive getInstance() {
@@ -57,7 +61,11 @@ public class Drive extends Subsystem{
     }
 
     public void writePeriodicOutputs() {
+        DutyCycleOut leftRequest = new DutyCycleOut(0.0);
+        DutyCycleOut rightRequest = new DutyCycleOut(0.0);
 
+        mLeftMaster.setControl(leftRequest.withOutput(PeriodicIO.left));
+        mRightMaster.setControl(rightRequest.withOutput(PeriodicIO.right));
     }
 
     
